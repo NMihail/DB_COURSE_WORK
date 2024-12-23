@@ -1,13 +1,17 @@
 {% extends 'main_app/base.html' %}
 
-{% block title %}Вход как клиент{% endblock %}
+{% block title %}Вход{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <h2 class="text-center">Вход как клиент</h2>
+        <h2 class="text-center">Вход</h2>
         <form method="POST" class="mt-4">
             {% csrf_token %}
+            <div class="mb-3">
+                <label for="user_name" class="form-label">Логин</label>
+                <input type="text" class="form-control" id="user_name" name="user_name" required>
+            </div>
             <div class="mb-3">
                 <label for="passport_series" class="form-label">Серия паспорта</label>
                 <input type="text" class="form-control" id="passport_series" name="passport_series" required>

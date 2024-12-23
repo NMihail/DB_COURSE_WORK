@@ -1,6 +1,7 @@
 import random
 from django.shortcuts import render, redirect
 from .models import Human, PersonalData, BankAccount, Transaction, Credit, Deposit, Card  # Импорт моделей
+from django.contrib.auth import authenticate, login, logout
 
 
 # Главная страница
@@ -8,30 +9,51 @@ def index(request):
     return render(request, 'main_app/index.html')
 
 
-# Вход для работника
-def employee_login(request):
+# Вход для клиента
+def user_login(request):
     if request.method == 'POST':
+        user_name = request.POST.get('user_name')
         passport_series = request.POST.get('passport_series')
         passport_number = request.POST.get('passport_number')
-
+        password = passport_series + '_' + passport_number
         try:
+            # Проверяем персональные данные
             personal_data = PersonalData.objects.get(
                 passport_series=passport_series,
                 passport_number=passport_number
             )
 
+            # Проверяем, является ли человек клиентом
             human = Human.objects.get(personal_data=personal_data)
-            if human.employee_credit_organization:
-                # Сохраняем ID работника в сессии
-                request.session['employee_id'] = human.id
-                return redirect('worker_dashboard')
+            if not human.employee_credit_organization:
+                user = authenticate(request, username=user_name, password=password)
+                if user is not None:
+                    login(request, user)
+                    # Сохраняем ID клиента в сессии
+                    request.session['human_id'] = human.id
+                    return redirect('client_dashboard')
+                else:
+                    # Персональные данные или запись в Human не найдены
+                    return redirect('error_page')
             else:
-                return redirect('error_page')
-
-        except (PersonalData.DoesNotExist, Human.DoesNotExist):
+                user = authenticate(request, username=user_name, password=password)
+                if user is not None:
+                    login(request, user)
+                    # Сохраняем ID работника в сессии
+                    request.session['employee_id'] = human.id
+                    return redirect('worker_dashboard')
+                else:
+                    # Персональные данные или запись в Human не найдены
+                    return redirect('error_page')
+        except Exception as e:
             return redirect('error_page')
 
-    return render(request, 'main_app/employee_login.html')
+    return render(request, 'main_app/user_login.html')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('user_login')
 
 
 # Рабочая панель для работника
@@ -363,38 +385,6 @@ def view_user_accounts(request):
             return redirect('worker_dashboard')
 
     return render(request, 'main_app/view_user_accounts.html')
-
-
-# Вход для клиента
-def client_login(request):
-    if request.method == 'POST':
-        passport_series = request.POST.get('passport_series')
-        passport_number = request.POST.get('passport_number')
-
-        try:
-            # Проверяем персональные данные
-            personal_data = PersonalData.objects.get(
-                passport_series=passport_series,
-                passport_number=passport_number
-            )
-
-            # Проверяем, является ли человек клиентом
-            human = Human.objects.get(personal_data=personal_data)
-            if not human.employee_credit_organization:
-                # Сохраняем данные в сессии
-                request.session['human_id'] = human.id
-
-                # Успешный вход для клиента
-                return redirect('client_dashboard')
-            else:
-                # Человек является работником, но пытается войти как клиент
-                return redirect('error_page')
-
-        except (PersonalData.DoesNotExist, Human.DoesNotExist):
-            # Персональные данные или запись в Human не найдены
-            return redirect('error_page')
-
-    return render(request, 'main_app/client_login.html')
 
 
 # Клиентская панель с информацией о банковских счетах, кредитах и депозитах
