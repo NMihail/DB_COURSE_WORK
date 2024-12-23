@@ -1,0 +1,33 @@
+<!-- add_transaction.html -->
+{% extends 'main_app/base.html' %}
+
+{% block title %}Добавить транзакцию{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Добавить транзакцию</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="account_out">Номер счета отправителя:</label>
+        <input type="text" class="form-control" id="account_out" name="account_out" required>
+    </div>
+    <div class="form-group">
+        <label for="account_in">Номер счета получателя:</label>
+        <input type="text" class="form-control" id="account_in" name="account_in" required>
+    </div>
+    <div class="form-group">
+        <label for="money_amount">Сумма перевода:</label>
+        <input type="number" class="form-control" id="money_amount" name="money_amount" step="0.01" required>
+    </div>
+    <div class="form-group">
+        <label for="payment_method">Метод оплаты:</label>
+        <select class="form-control" id="payment_method" name="payment_method">
+            <option value="True">Безналичный</option>
+            <option value="False">Наличный</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить транзакцию</button>
+</form>
+<a href="{% url 'worker_dashboard' %}" class="btn btn-secondary mt-3">Назад</a>
+{% endblock %}

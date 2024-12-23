@@ -1,11 +1,19 @@
 {% extends 'main_app/base.html' %}
 
-{% block title %}Рабочая панель{% endblock %}
+{% block title %}Панель управления работника{% endblock %}
 
 {% block content %}
-<h1 class="text-center">Рабочая панель</h1>
-<p class="text-center">Здесь отображаются функции для работы с клиентами.</p>
-<div class="alert alert-info text-center">
-    <strong>Функции для работников</strong> будут добавлены позже.
+<h1 class="text-center">Панель управления работника</h1>
+<p class="text-center">Выберите необходимую операцию:</p>
+
+<div class="text-center">
+    <a href="{% url 'add_transaction' %}" class="btn btn-primary m-2">Добавить транзакцию</a>
+    <a href="{% url 'edit_credit' %}" class="btn btn-primary m-2">Изменить данные по кредиту</a>
+    <a href="{% url 'edit_deposit' %}" class="btn btn-primary m-2">Изменить данные по депозиту</a>
+    <a href="{% url 'open_credit' %}" class="btn btn-success m-2">Открыть кредит</a>
+    <a href="{% url 'open_deposit' %}" class="btn btn-success m-2">Открыть депозит</a>
+    <a href="{% url 'open_card' %}" class="btn btn-success m-2">Открыть карту</a>
+    <a href="{% url 'close_card' %}" class="btn btn-success m-2">Закрыть карту</a>
+    <a href="{% url 'view_user_accounts' %}" class="btn btn-success m-2">Посмотреть данные о пользователе</a>
 </div>
 {% endblock %}

@@ -4,8 +4,49 @@
 
 {% block content %}
 <h1 class="text-center">Клиентская панель</h1>
-<p class="text-center">Здесь отображаются доступные услуги для клиентов.</p>
-<div class="alert alert-success text-center">
-    <strong>Функции для клиентов</strong> будут добавлены позже.
-</div>
+<p class="text-center">Добро пожаловать, {{ human.personal_data }}!</p>
+
+<h2 class="text-center mt-4">Ваши банковские счета</h2>
+
+{% if accounts_data %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Номер счета</th>
+                    <th>Баланс</th>
+                    <th>Кредит / Депозит</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in accounts_data %}
+                    <tr>
+                        <td>{{ account.number }}</td>
+                        <td>{{ account.money_amount }}</td>
+                        <td>
+                            {% if account.credit %}
+                                <strong>Кредит:</strong><br>
+                                Сумма: {{ account.credit.credit_amount }}<br>
+                                Долг: {{ account.credit.debt }}<br>
+                                Окончание: {{ account.credit.data_end_credit }}<br>
+                                Статус: {{ account.credit.status|yesno:"Активен,Закрыт" }}
+                            {% elif account.deposit %}
+                                <strong>Депозит:</strong><br>
+                                Сумма: {{ account.deposit.deposit_amount }}<br>
+                                Окончание: {{ account.deposit.data_end_deposit }}<br>
+                                Статус: {{ account.deposit.status|yesno:"Активен,Закрыт" }}
+                            {% else %}
+                                Нет данных
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info text-center">
+        У вас пока нет банковских счетов.
+    </div>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'main_app/base.html' %}
+
+{% block title %}Закрытие карты{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Закрыть карту</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="card_number">Номер карты:</label>
+        <input type="text" class="form-control" id="card_number" name="card_number" required>
+    </div>
+    <button type="submit" class="btn btn-danger">Закрыть карту</button>
+</form>
+{% endblock %}

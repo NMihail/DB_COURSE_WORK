@@ -1,0 +1,38 @@
+{% extends 'main_app/base.html' %}
+
+{% block title %}Открытие нового кредита{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Открытие нового кредита</h1>
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="human_id">ID пользователя:</label>
+        <input type="number" id="human_id" name="human_id" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="account_number">Номер нового счета:</label>
+        <input type="text" id="account_number" name="account_number" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="credit_amount">Сумма кредита:</label>
+        <input type="number" id="credit_amount" name="credit_amount" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="debt">Долг по кредиту:</label>
+        <input type="number" id="debt" name="debt" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="data_end_credit">Дата окончания кредита:</label>
+        <input type="date" id="data_end_credit" name="data_end_credit" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="status">Статус кредита (активен):</label>
+        <select id="status" name="status" class="form-control">
+            <option value="True">Да</option>
+            <option value="False">Нет</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Открыть кредит</button>
+</form>
+{% endblock %}

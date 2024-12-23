@@ -1,0 +1,66 @@
+{% extends 'main_app/base.html' %}
+
+{% block title %}Просмотр счетов пользователя{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Просмотр счетов пользователя</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="passport_series">Серия паспорта:</label>
+        <input type="text" class="form-control" id="passport_series" name="passport_series" required>
+    </div>
+    <div class="form-group">
+        <label for="passport_number">Номер паспорта:</label>
+        <input type="text" class="form-control" id="passport_number" name="passport_number" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Просмотреть счета</button>
+</form>
+
+{% if accounts_info %}
+    <h3 class="text-center mt-4">Счета пользователя</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Номер счета</th>
+                <th>Баланс</th>
+                <th>Кредит</th>
+                <th>Депозит</th>
+                <th>Статус счета</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account_info in accounts_info %}
+                <tr>
+                    <td>{{ account_info.account.number }}</td>
+                    <td>{{ account_info.account.money_amount }}</td>
+                    <td>
+                        {% if account_info.credit %}
+                            Кредит на сумму {{ account_info.credit.credit_amount }} (Статус: {{ account_info.credit.status }})
+                        {% else %}
+                            Нет кредита
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if account_info.deposit %}
+                            Депозит на сумму {{ account_info.deposit.deposit_amount }} (Статус: {{ account_info.deposit.status }})
+                        {% else %}
+                            Нет депозита
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if account_info.account.status %}
+                            Активен
+                        {% else %}
+                            Закрыт
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-center">У данного пользователя нет счетов.</p>
+{% endif %}
+{% endblock %}

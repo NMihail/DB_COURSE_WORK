@@ -1,0 +1,30 @@
+{% extends 'main_app/base.html' %}
+
+{% block title %}Редактировать депозит{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Редактирование данных депозита</h1>
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="account_number">Номер депозитного счета:</label>
+        <input type="text" id="account_number" name="account_number" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="deposit_amount">Новая сумма депозита:</label>
+        <input type="number" id="deposit_amount" name="deposit_amount" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="data_end_deposit">Новая дата окончания депозита:</label>
+        <input type="date" id="data_end_deposit" name="data_end_deposit" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="status">Новый статус (активен):</label>
+        <select id="status" name="status" class="form-control">
+            <option value="True">Да</option>
+            <option value="False">Нет</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+</form>
+{% endblock %}

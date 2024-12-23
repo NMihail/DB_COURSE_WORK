@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.fields import ArrayField
 
 # Модель для таблицы personal_data
 class PersonalData(models.Model):
@@ -35,8 +35,7 @@ class OrganizationData(models.Model):
 class Human(models.Model):
     personal_data = models.ForeignKey(PersonalData, on_delete=models.CASCADE, related_name='humans')
     organization_data = models.ForeignKey(OrganizationData, on_delete=models.CASCADE, related_name='employees')
-    bank_account_ids = models.ManyToManyField('BankAccount',
-                                              blank=True)  # Используем ManyToMany для связи с банковскими счетами
+    bank_account_ids = ArrayField(models.IntegerField(), blank=True, default=list)
     employee_credit_organization = models.BooleanField()  # Новый столбец
     organization = models.BooleanField()  # Новый столбец
 

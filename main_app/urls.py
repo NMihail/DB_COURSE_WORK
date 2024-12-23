@@ -22,7 +22,16 @@ urlpatterns = [
     path('', views.index, name='index'),  # Главная страница
     path('employee_login/', views.employee_login, name='employee_login'),  # Вход для работника
     path('client_login/', views.client_login, name='client_login'),  # Вход для клиента
-    path('worker_dashboard/', views.worker_dashboard, name='worker_dashboard'),  # Рабочая панель
+    path('worker_dashboard/', views.employee_dashboard, name='worker_dashboard'),  # Рабочая панель
     path('client_dashboard/', views.client_dashboard, name='client_dashboard'),  # Клиентская панель
+    path('add_transaction/', views.add_transaction, name='add_transaction'),  # Добавить транзакцию
+    path('edit_credit/', views.edit_credit, name='edit_credit'),  # Обновить данные по кредиту
+    path('edit_deposit/', views.edit_deposit, name='edit_deposit'),  # Обновить данные по кредиту
+    path('open_credit/', views.open_credit, name='open_credit'),  # Создать кредит
+    path('open_deposit/', views.open_deposit, name='open_deposit'),  # Создать депозит
+    path('open_card/', views.open_card, name='open_card'),  # Создать карту
+    path('close_card/', views.close_card, name='close_card'),  # Закрыть карту
+    path('view_user_accounts/', views.view_user_accounts, name='view_user_accounts'), # Посмотреть
+                                                                                      # данные о пользователях
     path('error/', views.error_page, name='error_page'),  # Страница ошибки
 ]
