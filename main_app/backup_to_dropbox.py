@@ -10,8 +10,7 @@ DB_PASSWORD = "postgres"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
-# Токен доступа Dropbox
-DROPBOX_ACCESS_TOKEN = ""
+# Здесь должен был быть токен, но github запретил его(
 
 # Имя файла для экспорта
 backup_file = f"backup_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.sql"
