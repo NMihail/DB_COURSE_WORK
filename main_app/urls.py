@@ -22,6 +22,7 @@ urlpatterns = [
     path('', views.index, name='index'),  # Главная страница
     path('admin/', admin.site.urls),  # Админ панель будет доступна по /admin/
     path('user_login/', views.user_login, name='user_login'),  # Вход для клиента
+    path('user_logout/', views.user_logout, name='user_logout'),
     path('worker_dashboard/', views.employee_dashboard, name='worker_dashboard'),  # Рабочая панель
     path('client_dashboard/', views.client_dashboard, name='client_dashboard'),  # Клиентская панель
     path('add_transaction/', views.add_transaction, name='add_transaction'),  # Добавить транзакцию
@@ -33,5 +34,10 @@ urlpatterns = [
     path('close_card/', views.close_card, name='close_card'),  # Закрыть карту
     path('view_user_accounts/', views.view_user_accounts, name='view_user_accounts'), # Посмотреть
                                                                                       # данные о пользователях
+    path('export/', views.export_data, name='export_data'),
+    path('export/data/xlsx/', views.export_data_xlsx, name='export_data_xlsx'),
+    path('export/data/csv/', views.export_data_csv, name='export_data_csv'),
+    path('export/cards/xlsx/', views.export_cards_xlsx, name='export_cards_xlsx'),
+    path('export/cards/csv/', views.export_cards_csv, name='export_cards_csv'),
     path('error/', views.error_page, name='error_page'),  # Страница ошибки
 ]

@@ -1,7 +1,10 @@
 import random
+from .decorators import role_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import Human, PersonalData, BankAccount, Transaction, Credit, Deposit, Card  # Импорт моделей
 from django.contrib.auth import authenticate, login, logout
+from .drop_to_desktop_data import export_data_xlsx_, export_data_csv_, export_cards_xlsx_, export_cards_csv_
 
 
 # Главная страница
@@ -31,6 +34,7 @@ def user_login(request):
                     login(request, user)
                     # Сохраняем ID клиента в сессии
                     request.session['human_id'] = human.id
+                    request.session['role'] = 'client'
                     return redirect('client_dashboard')
                 else:
                     # Персональные данные или запись в Human не найдены
@@ -41,6 +45,7 @@ def user_login(request):
                     login(request, user)
                     # Сохраняем ID работника в сессии
                     request.session['employee_id'] = human.id
+                    request.session['role'] = 'employee'
                     return redirect('worker_dashboard')
                 else:
                     # Персональные данные или запись в Human не найдены
@@ -52,15 +57,20 @@ def user_login(request):
 
 
 def user_logout(request):
+    request.session['role'] = 'none'
     logout(request)
     return redirect('user_login')
 
 
 # Рабочая панель для работника
+@login_required
+@role_required('employee')
 def employee_dashboard(request):
     return render(request, 'main_app/worker_dashboard.html')
 
 
+@login_required
+@role_required('employee')
 def add_transaction(request):
     if request.method == 'POST':
         # Получаем данные из формы
@@ -104,31 +114,28 @@ def add_transaction(request):
     return render(request, 'main_app/add_transaction.html')
 
 
+@login_required
+@role_required('employee')
 def edit_credit(request):
     if request.method == 'POST':
         # Получаем данные из формы
         account_number = request.POST.get('account_number')  # Номер счета
-        new_credit_amount = request.POST.get('credit_amount')  # Новая сумма кредита
         new_debt = request.POST.get('debt')  # Новый долг
-        new_data_end_credit = request.POST.get('data_end_credit')  # Новая дата окончания кредита
         new_status = request.POST.get('status') == 'True'  # Новый статус (True/False)
 
         try:
             # Находим счет по номеру
             account = BankAccount.objects.get(number=account_number)
 
-            # Проверяем, привязан ли к счету кредит
-            if not account.credit:
+            credit = None
+            # Редактируем данные кредита
+            try:
+                credit = account.credit
+            except Exception as e:
                 return redirect('edit_credit')
 
-            # Редактируем данные кредита
-            credit = account.credit
-            if new_credit_amount:
-                credit.credit_amount = new_credit_amount
             if new_debt:
                 credit.debt = new_debt
-            if new_data_end_credit:
-                credit.data_end_credit = new_data_end_credit
             credit.status = new_status
 
             # Сохраняем изменения
@@ -142,11 +149,12 @@ def edit_credit(request):
     return render(request, 'main_app/edit_credit.html')
 
 
+@login_required
+@role_required('employee')
 def edit_deposit(request):
     if request.method == 'POST':
         # Получаем данные из формы
         account_number = request.POST.get('account_number')  # Номер банковского счета
-        new_deposit_amount = request.POST.get('deposit_amount')  # Новая сумма депозита
         new_data_end_deposit = request.POST.get('data_end_deposit')  # Новая дата окончания депозита
         new_status = request.POST.get('status') == 'True'  # Новый статус (True/False)
 
@@ -154,14 +162,12 @@ def edit_deposit(request):
             # Находим банковский аккаунт по номеру
             account = BankAccount.objects.get(number=account_number)
 
-            # Проверяем, что этот счет связан с депозитом
-            if not account.deposit:
-                return redirect('edit_deposit')
-
+            deposit = None
             # Редактируем данные депозита
-            deposit = account.deposit
-            if new_deposit_amount:
-                deposit.deposit_amount = new_deposit_amount
+            try:
+                deposit = account.deposit
+            except Exception as e:
+                return redirect('edit_deposit')
             if new_data_end_deposit:
                 deposit.data_end_deposit = new_data_end_deposit
             deposit.status = new_status
@@ -177,6 +183,8 @@ def edit_deposit(request):
     return render(request, 'main_app/edit_deposit.html')
 
 
+@login_required
+@role_required('employee')
 def generate_unique_account_number():
     """Генерирует уникальный номер банковского счета."""
     while True:
@@ -187,6 +195,8 @@ def generate_unique_account_number():
             return account_number
 
 
+@login_required
+@role_required('employee')
 def open_credit(request):
     if request.method == 'POST':
         # Получение данных из формы
@@ -233,6 +243,8 @@ def open_credit(request):
     return render(request, 'main_app/open_credit.html')
 
 
+@login_required
+@role_required('employee')
 def open_deposit(request):
     if request.method == 'POST':
         # Получение данных из формы
@@ -277,6 +289,8 @@ def open_deposit(request):
     return render(request, 'main_app/open_deposit.html')
 
 
+@login_required
+@role_required('employee')
 def generate_unique_card_number():
     """Генерирует уникальный номер карты."""
     while True:
@@ -287,6 +301,8 @@ def generate_unique_card_number():
             return card_number
 
 
+@login_required
+@role_required('employee')
 def open_card(request):
     if request.method == 'POST':
         # Получение данных из формы
@@ -322,6 +338,8 @@ def open_card(request):
     return render(request, 'main_app/open_card.html')
 
 
+@login_required
+@role_required('employee')
 def close_card(request):
     if request.method == 'POST':
         # Получение данных из формы
@@ -346,6 +364,8 @@ def close_card(request):
     return render(request, 'main_app/close_card.html')
 
 
+@login_required
+@role_required('employee')
 def view_user_accounts(request):
     if request.method == 'POST':
         passport_series = request.POST.get('passport_series')
@@ -367,8 +387,18 @@ def view_user_accounts(request):
             accounts_info = []
             for account in bank_accounts:
                 # Для каждого счета проверяем, есть ли связанные кредиты или депозиты
-                credit = account.credit if account.credit else None
-                deposit = account.deposit if account.deposit else None
+                credit = None
+                deposit = None
+
+                try:
+                    credit = account.credit
+                except Exception as e:
+                    pass
+
+                try:
+                    deposit = account.deposit
+                except Exception as e:
+                    pass
 
                 accounts_info.append({
                     'account': account,
@@ -387,7 +417,43 @@ def view_user_accounts(request):
     return render(request, 'main_app/view_user_accounts.html')
 
 
+@login_required
+@role_required('employee')
+def export_data(request):
+    return render(request, 'main_app/exports.html')
+
+
+@login_required
+@role_required('employee')
+def export_data_xlsx(request):
+    export_data_xlsx_(request)
+    return redirect('worker_dashboard')
+
+
+@login_required
+@role_required('employee')
+def export_data_csv(request):
+    export_data_csv_(request)
+    return redirect('worker_dashboard')
+
+
+@login_required
+@role_required('employee')
+def export_cards_xlsx(request):
+    export_cards_xlsx_(request)
+    return redirect('worker_dashboard')
+
+
+@login_required
+@role_required('employee')
+def export_cards_csv(request):
+    export_cards_csv_(request)
+    return redirect('worker_dashboard')
+
+
 # Клиентская панель с информацией о банковских счетах, кредитах и депозитах
+@login_required
+@role_required('client')
 def client_dashboard(request):
     human_id = request.session.get('human_id')  # Получаем ID человека из сессии
     if not human_id:
@@ -408,19 +474,25 @@ def client_dashboard(request):
                 'credit': None,
                 'deposit': None,
             }
-            if account.credit:
-                account_info['credit'] = {
-                    'credit_amount': account.credit.credit_amount,
-                    'debt': account.credit.debt,
-                    'data_end_credit': account.credit.data_end_credit,
-                    'status': account.credit.status,
-                }
-            if account.deposit:
-                account_info['deposit'] = {
-                    'deposit_amount': account.deposit.deposit_amount,
-                    'data_end_deposit': account.deposit.data_end_deposit,
-                    'status': account.deposit.status,
-                }
+            try:
+                if account.credit:
+                    account_info['credit'] = {
+                        'credit_amount': account.credit.credit_amount,
+                        'debt': account.credit.debt,
+                        'data_end_credit': account.credit.data_end_credit,
+                        'status': account.credit.status,
+                    }
+            except Exception as e:
+                pass
+            try:
+                if account.deposit:
+                    account_info['deposit'] = {
+                        'deposit_amount': account.deposit.deposit_amount,
+                        'data_end_deposit': account.deposit.data_end_deposit,
+                        'status': account.deposit.status,
+                    }
+            except Exception as e:
+                pass
             accounts_data.append(account_info)
 
     except Human.DoesNotExist:

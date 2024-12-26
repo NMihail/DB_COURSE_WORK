@@ -2,6 +2,7 @@ import os
 import dropbox
 import psycopg2
 from datetime import datetime
+from dropbox import DropboxOAuth2FlowNoRedirect
 
 # Настройки базы данных
 DB_NAME = "course_work"
@@ -10,12 +11,13 @@ DB_PASSWORD = "postgres"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
-# Токен доступа Dropbox
-DROPBOX_ACCESS_TOKEN = "sl.CDR1BnzD_Q06Qec7qZTQSf8vf2D9kZTcKLgpEom04s88_XKMd2hgi39BoxbcZwGgRYOh59t5_GC1DeA4-PIt39fZHvKtKxdL5yr8AWQvBGnNChUkm2kTrBihYjnFmf3AhwKQAIhMzr40"
+# Refresh Token для Dropbox
+DROPBOX_REFRESH_TOKEN = "JZT5EmqTH3YAAAAAAAAAAcYeUqpPCe64zNgCVhUPhj7PPe8IFEjxelZccfWliEK4"
+APP_KEY = "9ayq9naf8get7nz"
+APP_SECRET = "4hkvnvjsgrt15lj"
 
 # Имя файла для экспорта
 backup_file = f"backup_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.sql"
-
 
 # Функция для подключения к базе данных и выполнения дампа
 def export_database_to_file():
@@ -44,7 +46,6 @@ def export_database_to_file():
         print(f"Ошибка при экспорте: {e}")
         raise
 
-
 # Получение списка таблиц
 def get_table_names(cursor):
     cursor.execute("""
@@ -54,12 +55,11 @@ def get_table_names(cursor):
     """)
     return [row[0] for row in cursor.fetchall()]
 
-
 # Функция загрузки на Dropbox
 def upload_to_dropbox():
     try:
         print("Подключение к Dropbox...")
-        dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+        dbx = dropbox.Dropbox(app_key=APP_KEY, app_secret=APP_SECRET, oauth2_refresh_token=DROPBOX_REFRESH_TOKEN)
 
         print(f"Загрузка файла {backup_file} в Dropbox...")
         with open(backup_file, "rb") as f:
@@ -75,12 +75,10 @@ def upload_to_dropbox():
             os.remove(backup_file)
             print(f"Локальный файл {backup_file} удалён.")
 
-
 # Основная функция
 def main():
     export_database_to_file()
     upload_to_dropbox()
-
 
 if __name__ == "__main__":
     main()

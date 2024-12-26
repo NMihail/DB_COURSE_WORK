@@ -7,13 +7,22 @@
 <p class="text-center">Выберите необходимую операцию:</p>
 
 <div class="text-center">
-    <a href="{% url 'add_transaction' %}" class="btn btn-primary m-2">Добавить транзакцию</a>
-    <a href="{% url 'edit_credit' %}" class="btn btn-primary m-2">Изменить данные по кредиту</a>
-    <a href="{% url 'edit_deposit' %}" class="btn btn-primary m-2">Изменить данные по депозиту</a>
-    <a href="{% url 'open_credit' %}" class="btn btn-success m-2">Открыть кредит</a>
-    <a href="{% url 'open_deposit' %}" class="btn btn-success m-2">Открыть депозит</a>
-    <a href="{% url 'open_card' %}" class="btn btn-success m-2">Открыть карту</a>
-    <a href="{% url 'close_card' %}" class="btn btn-success m-2">Закрыть карту</a>
-    <a href="{% url 'view_user_accounts' %}" class="btn btn-success m-2">Посмотреть данные о пользователе</a>
+    <main class="text-center">
+        <div class="text-center">
+            <div class="text-center">
+                <div class="text-center">
+                    <a href="{% url 'add_transaction' %}" class="btn btn-primary m-2">Добавить транзакцию</a>
+                    <a href="{% url 'edit_credit' %}" class="btn btn-primary m-2">Изменить данные по кредиту</a>
+                    <a href="{% url 'edit_deposit' %}" class="btn btn-primary m-2">Изменить данные по депозиту</a>
+                    <a href="{% url 'open_credit' %}" class="btn btn-primary m-2">Открыть кредит</a>
+                    <a href="{% url 'open_deposit' %}" class="btn btn-primary m-2">Открыть депозит</a>
+                    <a href="{% url 'open_card' %}" class="btn btn-primary m-2">Открыть карту</a>
+                    <a href="{% url 'close_card' %}" class="btn btn-primary m-2">Закрыть карту</a>
+                    <a href="{% url 'view_user_accounts' %}" class="btn btn-primary m-2">Посмотреть данные о пользователе</a>
+                    <a href="{% url 'export_data' %}" class="btn btn-primary m-2">Скачать данные</a>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 {% endblock %}

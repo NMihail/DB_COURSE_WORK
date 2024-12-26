@@ -17,33 +17,6 @@ body {
     max-width: 200px;
 }
 
-/* Волны */
-.wave {
-    position: absolute;
-    width: 200%;
-    height: 150px;
-    background: #b0c4de;
-    border-radius: 100%;
-    transform: translateX(-25%);
-    opacity: 0.8;
-}
-
-.wave-top {
-    top: 0;
-    transform: translateX(-25%) translateY(-50px) scaleY(1.5);
-}
-
-.wave-center {
-    top: 50%;
-    transform: translateX(-25%) translateY(-50%);
-    opacity: 0.6;
-}
-
-.wave-bottom {
-    bottom: 0;
-    transform: translateX(-25%) translateY(50px) scaleY(1.2);
-}
-
 /* Основной контейнер */
 .text-center {
     margin-top: 20px;

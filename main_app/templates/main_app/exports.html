@@ -1,0 +1,32 @@
+{% extends 'main_app/base.html' %}
+
+{% block title %}Панель управления работника{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Панель выбора получения данных на основе SQL SELECT запросов</h1>
+<p class="text-center">Выберите необходимый запрос:</p>
+
+<div class="text-center">
+    <main class="text-center">
+        <div class="text-center">
+            <div class="text-center">
+                <span>ФИО-кредиты-депозиты</span>
+                <div class="text-center">
+                    <a href="{% url 'export_data_xlsx' %}" class="btn btn-primary m-2">XSLX</a>
+                    <a href="{% url 'export_data_csv' %}" class="btn btn-primary m-2">CSV</a>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <span>Карты</span>
+                <div class="text-center">
+                    <a href="{% url 'export_cards_xlsx' %}" class="btn btn-primary m-2">XSLX</a>
+                    <a href="{% url 'export_cards_csv' %}" class="btn btn-primary m-2">CSV</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<a href="{% url 'worker_dashboard' %}" class="btn btn-secondary mt-3">Назад</a>
+{% endblock %}
