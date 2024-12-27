@@ -21,6 +21,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),  # Главная страница
     path('admin/', admin.site.urls),  # Админ панель будет доступна по /admin/
+    path('user_registration/', views.user_registration, name='user_registration'),  # Вход для клиента
     path('user_login/', views.user_login, name='user_login'),  # Вход для клиента
     path('user_logout/', views.user_logout, name='user_logout'),
     path('worker_dashboard/', views.employee_dashboard, name='worker_dashboard'),  # Рабочая панель

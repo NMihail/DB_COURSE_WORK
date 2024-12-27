@@ -1,4 +1,7 @@
 import random
+
+from django.contrib.auth.models import User
+
 from .decorators import role_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -10,6 +13,35 @@ from .drop_to_desktop_data import export_data_xlsx_, export_data_csv_, export_ca
 # Главная страница
 def index(request):
     return render(request, 'main_app/index.html')
+
+
+def user_registration(request):
+    if request.method == 'POST':
+        user_name = request.POST.get('user_name')
+        passport_series = request.POST.get('passport_series')
+        passport_number = request.POST.get('passport_number')
+        password = passport_series + '_' + passport_number
+        try:
+            # Проверяем персональные данные
+            personal_data = PersonalData.objects.get(
+                passport_series=passport_series,
+                passport_number=passport_number
+            )
+
+            # Проверяем, является ли человек клиентом
+            human = Human.objects.get(personal_data=personal_data)
+
+            user = User.objects.create_user(
+                user_name,
+                '',
+                password
+            )
+
+            return redirect('index')
+        except Exception as e:
+            return redirect('index')
+
+    return render(request, 'main_app/user_registration.html')
 
 
 # Вход для клиента
